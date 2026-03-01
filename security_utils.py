@@ -1,28 +1,30 @@
 import os
 import base64
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization, hashes
 
-# =========================
-#  AES (CIFRADO EN REPOSO) SIMETRICO
-# =========================
+# =====================================================
+# AES (CIFRADO SIMÉTRICO EN REPOSO)
+# =====================================================
 
+# Cargamos la clave AES desde variable de entorno
 AES_KEY = base64.urlsafe_b64decode(os.environ.get("AES_SECRET_KEY"))
 
 def encrypt_email(email: str) -> str:
     """
-    Cifra el email usando AES.
-    Esto es para guardarlo en la base de datos.
+    Cifra el email usando AES-GCM.
+    Se utiliza para guardar el email cifrado en la base de datos.
     """
     aesgcm = AESGCM(AES_KEY)
     nonce = os.urandom(12)
     encrypted = aesgcm.encrypt(nonce, email.encode(), None)
     return base64.b64encode(nonce + encrypted).decode()
 
+
 def decrypt_email(ciphertext: str) -> str:
     """
-    Descifra el email cuando lo queremos mostrar.
+    Descifra el email almacenado en base de datos.
     """
     raw = base64.b64decode(ciphertext)
     nonce = raw[:12]
@@ -31,18 +33,22 @@ def decrypt_email(ciphertext: str) -> str:
     return aesgcm.decrypt(nonce, encrypted, None).decode()
 
 
-# =========================
-#  RSA (CIFRADO ASIMETRICO FRONTEND → BACKEND)
-# =========================
+# =====================================================
+#  RSA (CIFRADO ASIMÉTRICO FRONTEND → BACKEND)
+# =====================================================
 
-# Generamos clave privada (solo vive en el backend)
-private_key = rsa.generate_private_key(
-    public_exponent=65537,
-    key_size=2048
-)
+# Cargar clave privada desde archivo
+with open("private_key.pem", "rb") as f:
+    private_key = serialization.load_pem_private_key(
+        f.read(),
+        password=None
+    )
 
-# Generamos clave pública (se enviará al frontend)
-public_key = private_key.public_key()
+# Cargar clave pública desde archivo
+with open("public_key.pem", "rb") as f:
+    public_key = serialization.load_pem_public_key(
+        f.read()
+    )
 
 def get_public_key():
     """
@@ -57,7 +63,7 @@ def get_public_key():
 
 def decrypt_rsa(encrypted_data: bytes) -> bytes:
     """
-    Descifra los datos que vienen del frontend.
+    Descifra los datos enviados desde el frontend.
     """
     return private_key.decrypt(
         encrypted_data,
