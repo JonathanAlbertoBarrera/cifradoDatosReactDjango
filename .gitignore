@@ -12,6 +12,8 @@ build/
 *.log
 db.sqlite3-journal
 /media
+/staticfiles
+staticfiles/
 
 
 # Entornos virtuales
@@ -37,3 +39,7 @@ Thumbs.db
 #llave publica y privada rsa
 private_key.pem
 public_key.pem
+
+
+#static files
+staticfiles/

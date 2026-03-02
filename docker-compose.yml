@@ -1,0 +1,78 @@
+services:
+  # =====================================================
+  # MySQL Database
+  # =====================================================
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+    #el user por defecto es root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ejemplo_cifrado
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 40s
+
+  # =====================================================
+  # Django Backend
+  # =====================================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_backend
+    restart: always
+    environment:
+      DB_NAME: ejemplo_cifrado
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_HOST: db
+      DB_PORT: 3306
+      AES_SECRET_KEY: ""
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  # =====================================================
+  # React Frontend
+  # =====================================================
+  frontend:
+    build:
+      context: ./frontend/mi-app-react
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8000
+    container_name: react_frontend
+    restart: always
+    ports:
+      - "5173:80"
+    networks:
+      - app_network
+
+# =====================================================
+# Volumes
+# =====================================================
+volumes:
+  mysql_data:
+    driver: local
+
+# =====================================================
+# Networks
+# =====================================================
+networks:
+  app_network:
+    driver: bridge

@@ -1,6 +1,7 @@
-Django==6.0.2
+Django==5.1.5
 djangorestframework==3.16.1
 mysqlclient==2.2.8
-cryptography==46.0.5
-python-dotenv==1.2.2
-django-cors-headers==4.9.0
+cryptography==44.0.0
+python-dotenv==1.0.1
+django-cors-headers==4.6.0
+gunicorn==23.0.0

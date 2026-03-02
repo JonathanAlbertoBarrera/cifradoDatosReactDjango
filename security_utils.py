@@ -9,7 +9,24 @@ from cryptography.hazmat.primitives import serialization, hashes
 # =====================================================
 
 # Cargamos la clave AES desde variable de entorno
-AES_KEY = base64.urlsafe_b64decode(os.environ.get("AES_SECRET_KEY"))
+AES_SECRET_KEY_ENV = os.environ.get("AES_SECRET_KEY")
+
+if not AES_SECRET_KEY_ENV:
+    raise ValueError(
+        " ERROR: AES_SECRET_KEY no está configurada.\n"
+        "   Para uso local: genera la clave con 'python generar_clave_aes.py'\n"
+        "   y agégala a tu archivo .env\n"
+        "   Para Docker: se genera automáticamente al iniciar."
+    )
+
+try:
+    AES_KEY = base64.urlsafe_b64decode(AES_SECRET_KEY_ENV)
+except Exception as e:
+    raise ValueError(
+        f" ERROR: AES_SECRET_KEY tiene un formato inválido.\n"
+        f"   Genera una nueva con 'python generar_clave_aes.py'\n"
+        f"   Error: {e}"
+    )
 
 def encrypt_email(email: str) -> str:
     """
