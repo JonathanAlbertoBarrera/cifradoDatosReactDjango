@@ -11,7 +11,7 @@ Las contraseñas **NUNCA** se almacenan en texto plano. Se utiliza el algoritmo 
 **¿Por qué es importante?**
 - Si la base de datos es comprometida, las contraseñas **no son vulnerables**
 
- <img src="img-readme/1.png" alt="Contraseña hash" style="width: 150px; margin: 5px;"/>
+ <img src="img-readme/1.png" alt="Contraseña hash" style="width: 500px; margin: 5px;"/>
 
 ---
 
@@ -23,7 +23,7 @@ Los datos sensibles como el **correo electrónico** se cifran usando **AES-256-G
 - Algoritmo simétrico (se genera una llave a la cual solo el back ocupará para guardar el dato de una manera cifrada y descifrarlo con esa misma llave para poder devolver el dato de una manera legible)
 - Incluso con acceso a la BD, los datos son ilegibles sin la clave
 - Protección contra filtraciones de información. En este caso tal vez un correo no es algo sensible, pero datos bancarios, por ejemplo el dinero en la cuenta de una persona o algun dato muy personal, es mejor que se guarde cifrado, sabiendo que en este caso no es irreversible como si lo es el hash.
-<img src="img-readme/2.png" alt="Correo cifrado" style="width: 150px; margin: 5px;"/>
+<img src="img-readme/2.png" alt="Correo cifrado" style="width: 500px; margin: 5px;"/>
 
 ---
 
@@ -38,7 +38,7 @@ Los datos viajan cifrados desde el navegador hasta el servidor usando **RSA-2048
 - Solo el backend puede descifrar con la clave privada
 - **Doble capa de seguridad**: RSA + SSL/TLS en producción
 
-<img src="img-readme/3.png" alt="Cifrado RSA" style="width: 150px; margin: 5px;"/>
+<img src="img-readme/3.png" alt="Cifrado RSA" style="width: 500px; margin: 5px;"/>
 
 **Flujo completo:**
 ```
@@ -92,7 +92,7 @@ Los datos viajan cifrados desde el navegador hasta el servidor usando **RSA-2048
 
 3. **(Opcional) Conectarse a la bd:** Con los siguientes valores en Data grip o la opción de preferencia:
 
-<img src="img-readme/4.png" alt="Conexion bd en docker data grip" style="width: 150px; margin: 5px;"/>
+<img src="img-readme/4.png" alt="Conexion bd en docker data grip" style="width: 500px; margin: 5px;"/>
 
 
 ####  Ventajas de usar Docker:
@@ -166,7 +166,7 @@ En una terminal a nivel raíz del proyecto ejecuta:
 python generar_rsa_keys.py
 #  Esto crea: private_key.pem y public_key.pem
 ```
-<img src="img-readme/5.png" alt="Generacion claves RSA" style="width: 150px; margin: 5px;"/>
+<img src="img-readme/5.png" alt="Generacion claves RSA" style="width: 500px; margin: 5px;"/>
 
 **4. Generar clave AES:**
 En una terminal a nivel raíz del proyecto ejecuta:
@@ -183,7 +183,7 @@ Abre tu `.env` y pega la clave:
 AES_SECRET_KEY=valorrecibido
 ```
 
-<img src="img-readme/6.png" alt="Generacion clave AES" style="width: 150px; margin: 5px;"/>
+<img src="img-readme/6.png" alt="Generacion clave AES" style="width: 500px; margin: 5px;"/>
 
 > **IMPORTANTE:** Si no configuras `AES_SECRET_KEY`, obtendrás este error al iniciar:
 > ```
